@@ -1,0 +1,25 @@
+name: Assignment validation
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'assignments/**'
+      - '.github/skills/**'
+      - '.github/agents/**'
+      - 'config.json'
+      - 'tests/**'
+      - '.github/workflows/assignment-validation.yml'
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test tests/assignment-scripts.test.js
+      - run: node --check assets/js/script.js
+      - run: node --check assets/js/assignment.js
+      - run: python -m py_compile assignments/fastapi-rest-apis/starter-code.py
